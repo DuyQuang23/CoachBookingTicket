@@ -88,6 +88,7 @@ public class TicketServiceImpl implements TicketService {
                 .pickupStopOder(ticket.getPickupStop().getStopOrder())
                 .dropoffStopOrder(ticket.getDropoffStop().getStopOrder())
                 .seatId(ticket.getSeat().getSeatId())
+                .price(ticket.getPrice())
                 .bookingDate(ticket.getBookingDate())
                 .paymentStatus(ticket.getPaymentStatus())
                 .cancelFlag(ticket.getCancelFlag())
