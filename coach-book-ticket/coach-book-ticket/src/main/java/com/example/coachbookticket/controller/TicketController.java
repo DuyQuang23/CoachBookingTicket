@@ -1,22 +1,22 @@
 package com.example.coachbookticket.controller;
 
-import com.example.coachbookticket.dto.TicketDetailCreateDTO;
+import com.example.coachbookticket.dto.TicketCreateDTO;
 import com.example.coachbookticket.dto.TicketDetailDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.example.coachbookticket.service.TicketDetailService;
+import com.example.coachbookticket.service.TicketService;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/tickets")
-public class TicketDetailController {
+public class TicketController {
 
-    private final TicketDetailService ticketService;
-    public TicketDetailController(TicketDetailService service) {
+    private final TicketService ticketService;
+    public TicketController(TicketService service) {
         this.ticketService = service;
     }
     @PostMapping
-    public ResponseEntity<TicketDetailDTO> create(@RequestBody TicketDetailCreateDTO dto) {
+    public ResponseEntity<TicketDetailDTO> create(@RequestBody TicketCreateDTO dto) {
         return ResponseEntity.ok(ticketService.create(dto));
     }
 

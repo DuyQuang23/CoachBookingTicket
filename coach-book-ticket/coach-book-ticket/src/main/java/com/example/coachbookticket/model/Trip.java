@@ -47,7 +47,7 @@ public class Trip {
     private Status status;
 
     @OneToMany(mappedBy = "trip", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    private List<TicketDetail> tickets;
+    private List<Ticket> tickets;
 
     @OneToMany(mappedBy = "trip", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<Comment> comments;

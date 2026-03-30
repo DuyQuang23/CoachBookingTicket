@@ -1,6 +1,6 @@
 package com.example.coachbookticket.service;
 
-import com.example.coachbookticket.dto.TicketDetailCreateDTO;
+import com.example.coachbookticket.dto.TicketCreateDTO;
 import com.example.coachbookticket.dto.TicketDetailDTO;
 import com.example.coachbookticket.exception.ResourceNotFoundException;
 import com.example.coachbookticket.model.*;
@@ -14,38 +14,48 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class TicketDetailServiceImpl implements TicketDetailService {
+public class TicketServiceImpl implements TicketService {
 
-    private final TicketDetailRepository ticketRepo;
+    private final TicketRepository ticketRepo;
     private final TripRepository tripRepo;
     private final UserRepository userRepo;
     private final SeatRepository seatRepo;
+    private final RouteStopRepository routeStopRepo;
 
     private final ModelMapper mapper = new ModelMapper();
     private final CarRepository carRepo;
 
     @Override
-    public TicketDetailDTO create(TicketDetailCreateDTO dto) {
+    public TicketDetailDTO create(TicketCreateDTO dto) {
         Trip trip = tripRepo.findById(dto.getTripId())
                 .orElseThrow(() -> new ResourceNotFoundException("Trip", "id", dto.getTripId()));
         User user = userRepo.findById(dto.getUserId())
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", dto.getUserId()));
-        Seat seat = seatRepo.findByCarAndSeatNumber(dto.getCarId(),dto.getSeatNumber())
-                .orElseThrow(() -> new ResourceNotFoundException("Seat", "number", dto.getSeatNumber()));
+        Seat seat = seatRepo.findByCarAndSeatId(dto.getCarId(),dto.getSeatId())
+                .orElseThrow(() -> new ResourceNotFoundException("Seat", "number", dto.getSeatId()));
         Car car = carRepo.findById(dto.getCarId())
                 .orElseThrow(() -> new ResourceNotFoundException("Car", "id", dto.getCarId()));
 
-        TicketDetail ticket = TicketDetail.builder()
+        RouteStop pickup = routeStopRepo.findById(dto.getPickupStopId())
+                .orElseThrow(() -> new ResourceNotFoundException("RouteStop", "id", dto.getPickupStopId()));
+
+        RouteStop dropoff = routeStopRepo.findById(dto.getDropoffStopId())
+                .orElseThrow(() -> new ResourceNotFoundException("RouteStop", "id", dto.getDropoffStopId()));
+
+        Ticket ticket = Ticket.builder()
                 .trip(trip)
                 .user(user)
                 .seat(seat)
                 .car(car)
+                .pickupStop(pickup)
+                .dropoffStop(dropoff)
+                .price(dto.getPrice())
                 .bookingDate(dto.getBookingDate())
                 .paymentStatus(dto.getPaymentStatus())
                 .cancelFlag(false)
                 .build();
 
-        TicketDetail saved = ticketRepo.save(ticket);
+        Ticket saved = ticketRepo.save(ticket);
         return convertToDTO(saved);
     }
 
@@ -68,19 +78,23 @@ public class TicketDetailServiceImpl implements TicketDetailService {
                                                         .collect(Collectors.toList());
     }
 
-    private TicketDetailDTO convertToDTO(TicketDetail ticket) {
+    private TicketDetailDTO convertToDTO(Ticket ticket) {
         return TicketDetailDTO.builder()
                 .ticketId(ticket.getTicketId())
                 .tripId(ticket.getTrip().getTripId())
                 .userId(ticket.getUser().getUserId())
                 .carId(ticket.getCar().getCarId())
                 .fullName(ticket.getUser().getFullName())
-                .routeStart(ticket.getTrip().getRoute().getStartPoint())
-                .routeEnd(ticket.getTrip().getRoute().getEndPoint())
-                .seatNumber(ticket.getSeat().getSeatNumber())
+                .pickupStopOder(ticket.getPickupStop().getStopOrder())
+                .dropoffStopOrder(ticket.getDropoffStop().getStopOrder())
+                .seatId(ticket.getSeat().getSeatId())
                 .bookingDate(ticket.getBookingDate())
                 .paymentStatus(ticket.getPaymentStatus())
                 .cancelFlag(ticket.getCancelFlag())
                 .build();
+    }
+    @Override
+    public List<Integer> getBookedSeatIds(Integer tripId, Integer carId, Integer newPickupOrder, Integer newDropoffOrder) {
+        return ticketRepo.findBookedSeatIdsForSegment(tripId, carId, newPickupOrder, newDropoffOrder);
     }
 }

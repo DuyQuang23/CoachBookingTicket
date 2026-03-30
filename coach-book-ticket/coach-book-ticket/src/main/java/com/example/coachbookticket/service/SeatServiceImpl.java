@@ -26,7 +26,7 @@ public class SeatServiceImpl implements SeatService {
         Car car = carRepo.findById(dto.getCarId())
                 .orElseThrow(() -> new ResourceNotFoundException("PassengerCar", "id", dto.getCarId()));
 
-        if (seatRepo.exsistsByCarAndSeatNumber(dto.getCarId(), dto.getSeatNumber()))
+        if (seatRepo.exsistsByCarAndSeatId(dto.getCarId(), dto.getSeatId()))
             throw new IllegalArgumentException("Seat number already exists in this car");
 
         Seat seat = Seat.builder()
@@ -108,4 +108,6 @@ public class SeatServiceImpl implements SeatService {
         return seatRepo.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Seat", "id", id));
     }
+
+
 }

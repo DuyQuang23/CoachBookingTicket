@@ -17,7 +17,7 @@ public class SeatDTO {
     private Integer carId;
 
     @JsonProperty("seat_number")
-    private Integer seatNumber;
+    private String seatNumber;
 
     @JsonProperty("seat_type")
     private String seatType;

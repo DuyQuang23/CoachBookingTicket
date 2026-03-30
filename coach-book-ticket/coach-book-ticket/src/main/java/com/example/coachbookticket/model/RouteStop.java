@@ -1,9 +1,7 @@
 package com.example.coachbookticket.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
-import java.time.LocalTime;
 
 @Entity
 @Table(name = "routestop")
@@ -12,29 +10,24 @@ import java.time.LocalTime;
 @AllArgsConstructor
 @Builder
 public class RouteStop {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "stop_id")
-    private Integer stopId;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "route_id")
-    @ToString.Exclude @EqualsAndHashCode.Exclude
-    @JsonBackReference
+    @JoinColumn(name = "route_id", nullable = false)
     private Route route;
 
-    @Column(name = "stop_name")
-    private String stopName;
+    @Column(name = "location_name", nullable = false)
+    private String locationName;
 
-    private String address;
+    @Column(name = "stop_order", nullable = false)
+    private Integer stopOrder;
 
-    @Column(name = "order_index")
-    private Integer orderIndex;
+    @Column(name = "distance_from_start")
+    private Integer distanceFromStart;
 
-    @Column(name = "arrival_time")
-    private LocalTime arrivalTime;
-
-    @Column(name = "departure_time")
-    private LocalTime departureTime;
-
-    private String note;
+    @Column(name = "time_from_start")
+    private Integer timeFromStart;
 }

@@ -13,4 +13,5 @@ public interface SeatService {
     List<SeatDTO> findByCar(Integer carId);
     List<SeatDTO> findAvailableSeats(Integer carId);
     Seat findEntityById(Integer id);
+
 }

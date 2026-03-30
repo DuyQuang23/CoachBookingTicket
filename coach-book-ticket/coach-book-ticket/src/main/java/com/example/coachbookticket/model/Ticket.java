@@ -5,12 +5,12 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "ticketdetail")
+@Table(name = "ticket")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class TicketDetail {
+public class Ticket {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ticket_id")
     private Integer ticketId;
@@ -34,9 +34,17 @@ public class TicketDetail {
 
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "seat_number")
+    @JoinColumn(name = "seat_id")
     @ToString.Exclude @EqualsAndHashCode.Exclude
     private Seat seat;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "pickup_stop_id", nullable = false)
+    private RouteStop pickupStop;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "dropoff_stop_id", nullable = false)
+    private RouteStop dropoffStop;
 
     @Column(name = "booking_date")
     private LocalDateTime bookingDate;
@@ -49,4 +57,7 @@ public class TicketDetail {
 
     @Column(name = "cancel_flag")
     private Boolean cancelFlag;
+
+    @Column(name = "price")
+    private Double price;
 }

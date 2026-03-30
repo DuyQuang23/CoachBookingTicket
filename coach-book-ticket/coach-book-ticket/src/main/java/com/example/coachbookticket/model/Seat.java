@@ -21,7 +21,10 @@ public class Seat {
     private Car car;
 
     @Column(name = "seat_number")
-    private Integer seatNumber;
+    private String seatNumber;
+
+    @Column(name = "floor", nullable = false)
+    private Integer floor;
 
     @Column(name = "seat_type")
     private String seatType;
@@ -30,5 +33,5 @@ public class Seat {
 
     @OneToMany(mappedBy = "seat", fetch = FetchType.LAZY)
     @ToString.Exclude @EqualsAndHashCode.Exclude
-    private List<TicketDetail> tickets;
+    private List<Ticket> tickets;
 }

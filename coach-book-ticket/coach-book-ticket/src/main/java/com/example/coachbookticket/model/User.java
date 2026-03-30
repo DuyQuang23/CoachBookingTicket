@@ -50,7 +50,7 @@ public class User extends BaseEntity implements UserDetails {
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     @ToString.Exclude @EqualsAndHashCode.Exclude
-    private List<TicketDetail> tickets;
+    private List<Ticket> tickets;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     @ToString.Exclude @EqualsAndHashCode.Exclude
