@@ -39,4 +39,15 @@ public interface TicketRepository extends JpaRepository<Ticket, Integer> {
             @Param("newPickupOrder") Integer newPickupOrder,
             @Param("newDropoffOrder") Integer newDropoffOrder
     );
+
+    @Query("SELECT t FROM Ticket t " +
+            "JOIN FETCH t.user " +
+            "JOIN FETCH t.seat " +
+            "JOIN FETCH t.pickupStop " +
+            "JOIN FETCH t.dropoffStop " +
+            "WHERE t.trip.tripId = :tripId " +
+            "AND t.car.carId = :carId " +
+            "AND t.paymentStatus = 'PAID' " +
+            "AND t.cancelFlag = false")
+    List<Ticket> findValidTicketsForManifest(@Param("tripId") Integer tripId, @Param("carId") Integer carId);
 }
